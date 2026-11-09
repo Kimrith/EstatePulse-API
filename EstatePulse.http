@@ -1,0 +1,45 @@
+@EstatePulse_HostAddress = http://localhost:5295
+
+### 1. Get all users
+GET {{EstatePulse_HostAddress}}/api/users
+Accept: application/json
+
+### 2. Get all users with query filter
+GET {{EstatePulse_HostAddress}}/api/users?search=john&role=Customer&isActive=true
+Accept: application/json
+
+### 3. Create a new user (JSON)
+POST {{EstatePulse_HostAddress}}/api/users
+Content-Type: application/json
+
+{
+  "fullName": "John Doe",
+  "email": "john.doe@example.com",
+  "phoneNumber": "+1234567890",
+  "password": "Password123!",
+  "role": "Customer",
+  "nationalIdCard": "ID123456",
+  "avatarUrl": "https://example.com/avatar.png"
+}
+
+### 4. Get user by ID
+GET {{EstatePulse_HostAddress}}/api/users/1
+Accept: application/json
+
+### 5. Update user (JSON)
+PUT {{EstatePulse_HostAddress}}/api/users/1
+Content-Type: application/json
+
+{
+  "fullName": "John Updated",
+  "email": "john.doe@example.com",
+  "phoneNumber": "+1987654321",
+  "password": "NewSecurePassword123!",
+  "role": "Agent",
+  "nationalIdCard": "ID987654",
+  "isActive": true,
+  "avatarUrl": "https://example.com/new-avatar.png"
+}
+
+### 6. Delete user by ID
+DELETE {{EstatePulse_HostAddress}}/api/users/1
