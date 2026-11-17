@@ -1,43 +1,13 @@
-﻿using System.ComponentModel.DataAnnotations;
 using EstatePulse.Data;
 using EstatePulse.DTOs;
-using EstatePulse.Enums;
-using MediatR;
-using Microsoft.AspNetCore.Http;
+using Mediator;
 using Microsoft.EntityFrameworkCore;
 
 namespace EstatePulse.Commands.Update
 {
     public class UpdateUserCommand : IRequest<UserDto?>
     {
-        [Required]
-        public int Id { get; set; }
-
-        [Required]
-        [MaxLength(150)]
-        public string FullName { get; set; } = string.Empty;
-
-        [Required]
-        [EmailAddress]
-        [MaxLength(255)]
-        public string Email { get; set; } = string.Empty;
-
-        [Required]
-        [MaxLength(30)]
-        public string PhoneNumber { get; set; } = string.Empty;
-
-        [MinLength(6)]
-        [MaxLength(100)]
-        public string? Password { get; set; }
-
-        public UserRole Role { get; set; }
-
-        [MaxLength(50)]
-        public string? NationalIdCard { get; set; }
-
-        public IFormFile? Avatar { get; set; }
-
-        public bool IsActive { get; set; }
+        public UserUpdateDto User { get; set; } = new UserUpdateDto();
     }
 
     public class UpdateUserCommandHandler : IRequestHandler<UpdateUserCommand, UserDto?>
@@ -49,10 +19,12 @@ namespace EstatePulse.Commands.Update
             _context = context;
         }
 
-        public async Task<UserDto?> Handle(UpdateUserCommand request, CancellationToken cancellationToken)
+        public async ValueTask<UserDto?> Handle(UpdateUserCommand request, CancellationToken cancellationToken)
         {
+            var dto = request.User;
+
             var user = await _context.Users
-                .FirstOrDefaultAsync(u => u.Id == request.Id, cancellationToken);
+                .FirstOrDefaultAsync(u => u.Id == dto.Id, cancellationToken);
 
             if (user == null)
             {
@@ -60,46 +32,50 @@ namespace EstatePulse.Commands.Update
             }
 
             var emailTaken = await _context.Users
-                .AnyAsync(u => u.Email.ToLower() == request.Email.ToLower() && u.Id != request.Id, cancellationToken);
+                .AnyAsync(u => u.Email.ToLower() == dto.Email.ToLower() && u.Id != dto.Id, cancellationToken);
 
             if (emailTaken)
             {
-                throw new InvalidOperationException($"A user with email '{request.Email}' already exists.");
+                throw new InvalidOperationException($"A user with email '{dto.Email}' already exists.");
             }
 
-            user.FullName = request.FullName;
-            user.Email = request.Email;
-            user.PhoneNumber = request.PhoneNumber;
-            user.Role = request.Role;
-            user.NationalIdCard = request.NationalIdCard;
-            user.IsActive = request.IsActive;
+            user.FullName = dto.FullName;
+            user.Email = dto.Email;
+            user.PhoneNumber = dto.PhoneNumber;
+            user.Role = dto.Role;
+            user.NationalIdCard = dto.NationalIdCard;
+            user.IsActive = dto.IsActive;
             user.UpdatedAt = DateTime.UtcNow;
 
-            if (!string.IsNullOrWhiteSpace(request.Password))
+            if (!string.IsNullOrWhiteSpace(dto.Password))
             {
-                user.PasswordHash = BCrypt.Net.BCrypt.HashPassword(request.Password);
+                user.PasswordHash = BCrypt.Net.BCrypt.HashPassword(dto.Password);
             }
 
-            if (request.Avatar != null && request.Avatar.Length > 0)
+            if (dto.Avatar != null && dto.Avatar.Length > 0)
             {
+                var uploadsFolder = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "uploads", "avatars");
+                Directory.CreateDirectory(uploadsFolder);
+
+                // Delete old avatar if present
                 if (!string.IsNullOrEmpty(user.AvatarUrl) && user.AvatarUrl.StartsWith("/uploads/avatars/"))
                 {
-                    var oldFilePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", user.AvatarUrl.TrimStart('/'));
+                    var relativePath = user.AvatarUrl.TrimStart('/').Replace('/', Path.DirectorySeparatorChar);
+                    var oldFilePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", relativePath);
+
                     if (File.Exists(oldFilePath))
                     {
                         File.Delete(oldFilePath);
                     }
                 }
 
-                var uploadsFolder = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "uploads", "avatars");
-                Directory.CreateDirectory(uploadsFolder);
-
-                var fileName = $"{Guid.NewGuid()}{Path.GetExtension(request.Avatar.FileName)}";
+                // Save new avatar
+                var fileName = $"{Guid.NewGuid()}{Path.GetExtension(dto.Avatar.FileName)}";
                 var filePath = Path.Combine(uploadsFolder, fileName);
 
                 using (var stream = new FileStream(filePath, FileMode.Create))
                 {
-                    await request.Avatar.CopyToAsync(stream, cancellationToken);
+                    await dto.Avatar.CopyToAsync(stream, cancellationToken);
                 }
 
                 user.AvatarUrl = $"/uploads/avatars/{fileName}";

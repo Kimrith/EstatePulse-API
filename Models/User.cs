@@ -1,4 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using EstatePulse.Enums;
 
@@ -55,4 +55,17 @@ public class User
 
     [Column("updated_at")]
     public DateTime? UpdatedAt { get; set; }
+
+    // Navigation Properties
+    [InverseProperty(nameof(UserFollows.FollowingUser))]
+    public virtual ICollection<UserFollows> Followings { get; set; } = new List<UserFollows>();
+
+    [InverseProperty(nameof(UserFollows.FollowedUser))]
+    public virtual ICollection<UserFollows> Followers { get; set; } = new List<UserFollows>();
+
+    public virtual Agent? AgentProfile { get; set; }
+    public virtual ICollection<Booking> Bookings { get; set; } = new List<Booking>();
+    public virtual ICollection<Payment> Payments { get; set; } = new List<Payment>();
+    public virtual ICollection<CustomerKYCDocument> KycDocuments { get; set; } = new List<CustomerKYCDocument>();
+    public virtual ICollection<AuditLog> AuditLogs { get; set; } = new List<AuditLog>();
 }

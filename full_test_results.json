@@ -1,0 +1,768 @@
+{
+  "timestamp": "2026-11-17 00:55:53",
+  "base_url": "http://localhost:5295",
+  "total_tests": 38,
+  "passed": 38,
+  "failed": 0,
+  "pass_rate_pct": 100.0,
+  "duration_seconds": 1.81,
+  "tests": [
+    {
+      "phase": "1. Setup (POST)",
+      "test_id": "POST-USER-1",
+      "name": "Create Agent User (Parent Entity)",
+      "method": "POST",
+      "endpoint": "/api/Users",
+      "status_code": 201,
+      "expected_status": "201",
+      "passed": true,
+      "notes": "Created User ID: 2",
+      "response": {
+        "id": 2,
+        "fullName": "Agent Tester 9EA48F",
+        "email": "agent.tester.9ea48f@estatepulse.local",
+        "phoneNumber": "+1555123001",
+        "role": 1,
+        "nationalIdCard": "NID-AG-9ea48f",
+        "avatarUrl": null,
+        "isActive": true,
+        "createdAt": "2026-11-16T17:55:52.1032175Z",
+        "updatedAt": null
+      }
+    },
+    {
+      "phase": "1. Setup (POST)",
+      "test_id": "POST-USER-2",
+      "name": "Create Customer User (Parent Entity)",
+      "method": "POST",
+      "endpoint": "/api/Users",
+      "status_code": 201,
+      "expected_status": "201",
+      "passed": true,
+      "notes": "Created User ID: 3",
+      "response": {
+        "id": 3,
+        "fullName": "Customer Tester 9EA48F",
+        "email": "customer.tester.9ea48f@estatepulse.local",
+        "phoneNumber": "+1555123002",
+        "role": 0,
+        "nationalIdCard": "NID-CU-9ea48f",
+        "avatarUrl": null,
+        "isActive": true,
+        "createdAt": "2026-11-16T17:55:52.2703168Z",
+        "updatedAt": null
+      }
+    },
+    {
+      "phase": "1. Setup (POST)",
+      "test_id": "POST-AGENT-1",
+      "name": "Create Agent Record",
+      "method": "POST",
+      "endpoint": "/api/agents",
+      "status_code": 201,
+      "expected_status": "201",
+      "passed": true,
+      "notes": "Created Agent ID: 1, Code: AG-9EA48F",
+      "response": {
+        "id": 1,
+        "userId": 2,
+        "agentCode": "AG-9EA48F",
+        "licenseNumber": "LIC-9EA48F",
+        "commissionRate": 3.75,
+        "assignedBranch": "Metropolitan Central Branch",
+        "totalDealsClosed": 15,
+        "rating": 4.85,
+        "bio": "Certified commercial and residential real estate specialist.",
+        "isVerified": true,
+        "createdAt": "2026-11-16T17:55:52.3185779Z",
+        "updatedAt": null
+      }
+    },
+    {
+      "phase": "1. Setup (POST)",
+      "test_id": "POST-PROJ-1",
+      "name": "Create Project Entity",
+      "method": "POST",
+      "endpoint": "/api/Project",
+      "status_code": 201,
+      "expected_status": "201",
+      "passed": true,
+      "notes": "Created Project ID: 3, Slug: project-pulse-9ea48f",
+      "response": {
+        "id": 3,
+        "name": "EstatePulse Oasis 9EA48F",
+        "slug": "project-pulse-9ea48f",
+        "locationAddress": "888 Grand Boulevard, Riverside District",
+        "city": "Phnom Penh",
+        "latitude": 11.5621,
+        "longitude": 104.916,
+        "thumbnailUrl": null,
+        "description": "Premier eco-friendly mixed-use development with riverside views.",
+        "isPublished": true,
+        "createdAt": "2026-11-16T17:55:52.3851883Z"
+      }
+    },
+    {
+      "phase": "1. Setup (POST)",
+      "test_id": "POST-LEAD-1",
+      "name": "Create AgentLead Record",
+      "method": "POST",
+      "endpoint": "/api/agent-leads",
+      "status_code": 201,
+      "expected_status": "201",
+      "passed": true,
+      "notes": "Created Lead ID: 1, Status: New",
+      "response": {
+        "id": 1,
+        "agentId": 1,
+        "customerId": 3,
+        "leadName": "Lead Client 9EA48F",
+        "leadPhone": "+1555333444",
+        "leadEmail": "lead.9ea48f@estatepulse.local",
+        "budgetMin": 200000.0,
+        "budgetMax": 450000.0,
+        "status": "New",
+        "notes": "Looking for penthouse or corner 3-bed unit.",
+        "createdAt": "2026-11-16T17:55:52.4946891Z",
+        "updatedAt": null,
+        "agentCode": "AG-9EA48F",
+        "customerName": "Customer Tester 9EA48F"
+      }
+    },
+    {
+      "phase": "1. Setup (POST)",
+      "test_id": "POST-FOLLOW-1",
+      "name": "Establish UserFollow Relationship",
+      "method": "POST",
+      "endpoint": "/api/UserFollows/2",
+      "status_code": 200,
+      "expected_status": "200",
+      "passed": true,
+      "notes": "Follow Relationship ID: 1 (2 -> 3)",
+      "response": {
+        "id": 1,
+        "followingUserId": 2,
+        "followedUserId": 3,
+        "createdAt": "2026-11-16T17:55:52.6110435Z",
+        "followingUser": {
+          "id": 2,
+          "fullName": "Agent Tester 9EA48F",
+          "email": "agent.tester.9ea48f@estatepulse.local",
+          "avatarUrl": null
+        },
+        "followedUser": {
+          "id": 3,
+          "fullName": "Customer Tester 9EA48F",
+          "email": "customer.tester.9ea48f@estatepulse.local",
+          "avatarUrl": null
+        }
+      }
+    },
+    {
+      "phase": "2. Retrieval (GET)",
+      "test_id": "GET-USERS-LIST",
+      "name": "List Users with searchTerm filter",
+      "method": "GET",
+      "endpoint": "/api/Users?searchTerm=9ea48f",
+      "status_code": 200,
+      "expected_status": "200",
+      "passed": true,
+      "notes": "Found created users 2 and 3: True",
+      "response": {
+        "totalCount": 2,
+        "returned": 2
+      }
+    },
+    {
+      "phase": "2. Retrieval (GET)",
+      "test_id": "GET-AGENTS-LIST",
+      "name": "List Agents with pagination",
+      "method": "GET",
+      "endpoint": "/api/agents",
+      "status_code": 200,
+      "expected_status": "200",
+      "passed": true,
+      "notes": "Found created agent 1: True",
+      "response": {
+        "totalCount": 1,
+        "returned": 1
+      }
+    },
+    {
+      "phase": "2. Retrieval (GET)",
+      "test_id": "GET-PROJ-LIST",
+      "name": "List Projects via /api/Project",
+      "method": "GET",
+      "endpoint": "/api/Project",
+      "status_code": 200,
+      "expected_status": "200",
+      "passed": true,
+      "notes": "Found created project 3: True",
+      "response": {
+        "totalCount": 1,
+        "returned": 1
+      }
+    },
+    {
+      "phase": "2. Retrieval (GET)",
+      "test_id": "GET-PROJ-PLURAL",
+      "name": "Verify Route /api/projects Route Mapping",
+      "method": "GET",
+      "endpoint": "/api/projects",
+      "status_code": 404,
+      "expected_status": "200 or 404 (Discrepancy Check)",
+      "passed": true,
+      "notes": "Controller is configured at /api/Project. /api/projects returned 404",
+      "response": {
+        "responseStatus": 404
+      }
+    },
+    {
+      "phase": "2. Retrieval (GET)",
+      "test_id": "GET-LEADS-LIST",
+      "name": "List Agent Leads with agentId filter",
+      "method": "GET",
+      "endpoint": "/api/agent-leads?agentId=1",
+      "status_code": 200,
+      "expected_status": "200",
+      "passed": true,
+      "notes": "Found created lead 1: True",
+      "response": {
+        "totalCount": 1,
+        "returned": 1
+      }
+    },
+    {
+      "phase": "2. Retrieval (GET)",
+      "test_id": "GET-USER-BY-ID",
+      "name": "Lookup User by ID",
+      "method": "GET",
+      "endpoint": "/api/Users/2",
+      "status_code": 200,
+      "expected_status": "200",
+      "passed": true,
+      "notes": "Retrieved User Email: agent.tester.9ea48f@estatepulse.local",
+      "response": {
+        "id": 2,
+        "fullName": "Agent Tester 9EA48F",
+        "email": "agent.tester.9ea48f@estatepulse.local",
+        "phoneNumber": "+1555123001",
+        "role": 1,
+        "nationalIdCard": "NID-AG-9ea48f",
+        "avatarUrl": null,
+        "isActive": true,
+        "createdAt": "2026-11-16T17:55:52.1032175",
+        "updatedAt": null
+      }
+    },
+    {
+      "phase": "2. Retrieval (GET)",
+      "test_id": "GET-AGENT-BY-ID",
+      "name": "Lookup Agent by ID",
+      "method": "GET",
+      "endpoint": "/api/agents/1",
+      "status_code": 200,
+      "expected_status": "200",
+      "passed": true,
+      "notes": "Retrieved Agent Code: AG-9EA48F",
+      "response": {
+        "id": 1,
+        "userId": 2,
+        "agentCode": "AG-9EA48F",
+        "licenseNumber": "LIC-9EA48F",
+        "commissionRate": 3.75,
+        "assignedBranch": "Metropolitan Central Branch",
+        "totalDealsClosed": 15,
+        "rating": 4.85,
+        "bio": "Certified commercial and residential real estate specialist.",
+        "isVerified": true,
+        "createdAt": "2026-11-16T17:55:52.3185779",
+        "updatedAt": null
+      }
+    },
+    {
+      "phase": "2. Retrieval (GET)",
+      "test_id": "GET-PROJ-BY-ID",
+      "name": "Lookup Project by ID",
+      "method": "GET",
+      "endpoint": "/api/Project/3",
+      "status_code": 200,
+      "expected_status": "200",
+      "passed": true,
+      "notes": "Retrieved Project Name: EstatePulse Oasis 9EA48F",
+      "response": {
+        "id": 3,
+        "name": "EstatePulse Oasis 9EA48F",
+        "slug": "project-pulse-9ea48f",
+        "locationAddress": "888 Grand Boulevard, Riverside District",
+        "city": "Phnom Penh",
+        "latitude": 11.5621,
+        "longitude": 104.916,
+        "thumbnailUrl": null,
+        "description": "Premier eco-friendly mixed-use development with riverside views.",
+        "isPublished": true,
+        "createdAt": "2026-11-16T17:55:52.3851883"
+      }
+    },
+    {
+      "phase": "2. Retrieval (GET)",
+      "test_id": "GET-PROJ-BY-SLUG",
+      "name": "Lookup Project by Slug",
+      "method": "GET",
+      "endpoint": "/api/Project/slug/project-pulse-9ea48f",
+      "status_code": 200,
+      "expected_status": "200",
+      "passed": true,
+      "notes": "Found Project ID: 3",
+      "response": {
+        "id": 3,
+        "name": "EstatePulse Oasis 9EA48F",
+        "slug": "project-pulse-9ea48f",
+        "locationAddress": "888 Grand Boulevard, Riverside District",
+        "city": "Phnom Penh",
+        "latitude": 11.5621,
+        "longitude": 104.916,
+        "thumbnailUrl": null,
+        "description": "Premier eco-friendly mixed-use development with riverside views.",
+        "isPublished": true,
+        "createdAt": "2026-11-16T17:55:52.3851883"
+      }
+    },
+    {
+      "phase": "2. Retrieval (GET)",
+      "test_id": "GET-LEAD-BY-ID",
+      "name": "Lookup AgentLead by ID",
+      "method": "GET",
+      "endpoint": "/api/agent-leads/1",
+      "status_code": 200,
+      "expected_status": "200",
+      "passed": true,
+      "notes": "Retrieved Lead: Lead Client 9EA48F",
+      "response": {
+        "id": 1,
+        "agentId": 1,
+        "customerId": 3,
+        "leadName": "Lead Client 9EA48F",
+        "leadPhone": "+1555333444",
+        "leadEmail": "lead.9ea48f@estatepulse.local",
+        "budgetMin": 200000.0,
+        "budgetMax": 450000.0,
+        "status": "New",
+        "notes": "Looking for penthouse or corner 3-bed unit.",
+        "createdAt": "2026-11-16T17:55:52.4946891",
+        "updatedAt": null,
+        "agentCode": "AG-9EA48F",
+        "customerName": "Customer Tester 9EA48F"
+      }
+    },
+    {
+      "phase": "2. Retrieval (GET)",
+      "test_id": "GET-AGENT-LEADS-SUB",
+      "name": "Specialized Sub-route: GET /api/agents/{id}/leads",
+      "method": "GET",
+      "endpoint": "/api/agents/1/leads",
+      "status_code": 200,
+      "expected_status": "200",
+      "passed": true,
+      "notes": "Successfully retrieved leads belonging to Agent 1",
+      "response": {
+        "itemsCount": 1
+      }
+    },
+    {
+      "phase": "2. Retrieval (GET)",
+      "test_id": "GET-FOLLOWERS-SUB",
+      "name": "Specialized Sub-route: GET /api/UserFollows/followers/{userId}",
+      "method": "GET",
+      "endpoint": "/api/UserFollows/followers/3",
+      "status_code": 200,
+      "expected_status": "200",
+      "passed": true,
+      "notes": "Verified User 2 is in followers list of User 3",
+      "response": {
+        "items": [
+          {
+            "id": 1,
+            "followingUserId": 2,
+            "followedUserId": 3,
+            "createdAt": "2026-11-16T17:55:52.6110435",
+            "followingUser": {
+              "id": 2,
+              "fullName": "Agent Tester 9EA48F",
+              "email": "agent.tester.9ea48f@estatepulse.local",
+              "avatarUrl": null
+            },
+            "followedUser": null
+          }
+        ]
+      }
+    },
+    {
+      "phase": "2. Retrieval (GET)",
+      "test_id": "GET-FOLLOWING-SUB",
+      "name": "Specialized Sub-route: GET /api/UserFollows/following/{userId}",
+      "method": "GET",
+      "endpoint": "/api/UserFollows/following/2",
+      "status_code": 200,
+      "expected_status": "200",
+      "passed": true,
+      "notes": "Verified User 3 is in following list of User 2",
+      "response": {
+        "items": [
+          {
+            "id": 1,
+            "followingUserId": 2,
+            "followedUserId": 3,
+            "createdAt": "2026-11-16T17:55:52.6110435",
+            "followingUser": null,
+            "followedUser": {
+              "id": 3,
+              "fullName": "Customer Tester 9EA48F",
+              "email": "customer.tester.9ea48f@estatepulse.local",
+              "avatarUrl": null
+            }
+          }
+        ]
+      }
+    },
+    {
+      "phase": "2. Retrieval (GET)",
+      "test_id": "GET-IS-FOLLOWING",
+      "name": "Specialized Sub-route: GET /api/UserFollows/is-following",
+      "method": "GET",
+      "endpoint": "/api/UserFollows/is-following?followerId=2&followedId=3",
+      "status_code": 200,
+      "expected_status": "200",
+      "passed": true,
+      "notes": "Verified isFollowing returned True",
+      "response": {
+        "followerId": 2,
+        "followedId": 3,
+        "isFollowing": true
+      }
+    },
+    {
+      "phase": "2. Retrieval (GET)",
+      "test_id": "GET-FOLLOW-COUNTS",
+      "name": "Specialized Sub-route: GET /api/UserFollows/counts/{userId}",
+      "method": "GET",
+      "endpoint": "/api/UserFollows/counts/2 & /3",
+      "status_code": "200/200",
+      "expected_status": "200",
+      "passed": true,
+      "notes": "User 1 followingCount=1, User 2 followersCount=1",
+      "response": {
+        "User1": {
+          "userId": 2,
+          "followersCount": 0,
+          "followingCount": 1
+        },
+        "User2": {
+          "userId": 3,
+          "followersCount": 1,
+          "followingCount": 0
+        }
+      }
+    },
+    {
+      "phase": "3. Modification (PUT/PATCH)",
+      "test_id": "PUT-USER",
+      "name": "Full Update User Record via PUT",
+      "method": "PUT",
+      "endpoint": "/api/Users/2",
+      "status_code": 200,
+      "expected_status": "200",
+      "passed": true,
+      "notes": "Updated FullName: Agent Master 9EA48F",
+      "response": {
+        "id": 2,
+        "fullName": "Agent Master 9EA48F",
+        "email": "agent.tester.9ea48f@estatepulse.local",
+        "phoneNumber": "+1555987654",
+        "role": 1,
+        "nationalIdCard": "NID-AG-9ea48f-MOD",
+        "avatarUrl": null,
+        "isActive": true,
+        "createdAt": "2026-11-16T17:55:52.1032175",
+        "updatedAt": "2026-11-16T17:55:53.0459889Z"
+      }
+    },
+    {
+      "phase": "3. Modification (PUT/PATCH)",
+      "test_id": "PUT-AGENT",
+      "name": "Full Update Agent Record via PUT",
+      "method": "PUT",
+      "endpoint": "/api/agents/1",
+      "status_code": 200,
+      "expected_status": "200",
+      "passed": true,
+      "notes": "Updated CommissionRate: 4.5, Branch: Regional Flagship Office",
+      "response": {
+        "id": 1,
+        "userId": 2,
+        "agentCode": "AG-9EA48F",
+        "licenseNumber": "LIC-9EA48F-REV",
+        "commissionRate": 4.5,
+        "assignedBranch": "Regional Flagship Office",
+        "totalDealsClosed": 22,
+        "rating": 4.95,
+        "bio": "Senior Partner & Luxury Estate Advisor.",
+        "isVerified": true,
+        "createdAt": "2026-11-16T17:55:52.3185779",
+        "updatedAt": "2026-11-16T17:55:53.096578Z"
+      }
+    },
+    {
+      "phase": "3. Modification (PUT/PATCH)",
+      "test_id": "PUT-PROJ",
+      "name": "Full Update Project Record via PUT",
+      "method": "PUT",
+      "endpoint": "/api/Project/3",
+      "status_code": 200,
+      "expected_status": "200",
+      "passed": true,
+      "notes": "Updated Project Name: EstatePulse Oasis Tower 9EA48F",
+      "response": {
+        "id": 3,
+        "name": "EstatePulse Oasis Tower 9EA48F",
+        "slug": "project-pulse-9ea48f",
+        "locationAddress": "890 Grand Boulevard, Riverside District",
+        "city": "Phnom Penh",
+        "latitude": 11.563,
+        "longitude": 104.917,
+        "thumbnailUrl": null,
+        "description": "Expanded Phase 2 with private marina and sky lounge.",
+        "isPublished": true,
+        "createdAt": "2026-11-16T17:55:52.3851883"
+      }
+    },
+    {
+      "phase": "3. Modification (PUT/PATCH)",
+      "test_id": "PUT-LEAD",
+      "name": "Full Update AgentLead Record via PUT",
+      "method": "PUT",
+      "endpoint": "/api/agent-leads/1",
+      "status_code": 200,
+      "expected_status": "200",
+      "passed": true,
+      "notes": "Updated Status: In Progress, BudgetMax: 500000",
+      "response": {
+        "id": 1,
+        "agentId": 1,
+        "customerId": 3,
+        "leadName": "Lead Client 9EA48F (Negotiating)",
+        "leadPhone": "+1555333999",
+        "leadEmail": "lead.negotiate.9ea48f@estatepulse.local",
+        "budgetMin": 250000.0,
+        "budgetMax": 500000.0,
+        "status": "In Progress",
+        "notes": "Client requested in-person site inspection.",
+        "createdAt": "2026-11-16T17:55:52.4946891",
+        "updatedAt": "2026-11-16T17:55:53.213737Z",
+        "agentCode": "AG-9EA48F",
+        "customerName": "Customer Tester 9EA48F"
+      }
+    },
+    {
+      "phase": "3. Modification (PUT/PATCH)",
+      "test_id": "PATCH-LEAD-STATUS",
+      "name": "Specialized Status Patching via PATCH",
+      "method": "PATCH",
+      "endpoint": "/api/agent-leads/1/status",
+      "status_code": 200,
+      "expected_status": "200",
+      "passed": true,
+      "notes": "Successfully transitioned status to Qualified",
+      "response": {
+        "id": 1,
+        "agentId": 1,
+        "customerId": 3,
+        "leadName": "Lead Client 9EA48F (Negotiating)",
+        "leadPhone": "+1555333999",
+        "leadEmail": "lead.negotiate.9ea48f@estatepulse.local",
+        "budgetMin": 250000.0,
+        "budgetMax": 500000.0,
+        "status": "Qualified",
+        "notes": "Client requested in-person site inspection.",
+        "createdAt": "2026-11-16T17:55:52.4946891",
+        "updatedAt": "2026-11-16T17:55:53.241903Z",
+        "agentCode": "AG-9EA48F",
+        "customerName": "Customer Tester 9EA48F"
+      }
+    },
+    {
+      "phase": "4. Validation Edge",
+      "test_id": "VAL-SELF-FOLLOW",
+      "name": "Prevent Self-Following Rule",
+      "method": "POST",
+      "endpoint": "/api/UserFollows/2",
+      "status_code": 400,
+      "expected_status": "400",
+      "passed": true,
+      "notes": "Rejected self-following with 400 Bad Request",
+      "response": {
+        "message": "Users cannot follow themselves."
+      }
+    },
+    {
+      "phase": "4. Validation Edge",
+      "test_id": "VAL-DUP-EMAIL",
+      "name": "Prevent Duplicate User Email Registration",
+      "method": "POST",
+      "endpoint": "/api/Users",
+      "status_code": 409,
+      "expected_status": "409",
+      "passed": true,
+      "notes": "Rejected duplicate email with 409 Conflict",
+      "response": {
+        "message": "A user with email 'agent.tester.9ea48f@estatepulse.local' already exists."
+      }
+    },
+    {
+      "phase": "4. Validation Edge",
+      "test_id": "VAL-AGENT-NONEXIST-USER",
+      "name": "Prevent Agent Creation for Non-existent User",
+      "method": "POST",
+      "endpoint": "/api/agents",
+      "status_code": 400,
+      "expected_status": "400",
+      "passed": true,
+      "notes": "Rejected with 400 Bad Request (No user found)",
+      "response": {
+        "message": "No user found with ID '9999999'."
+      }
+    },
+    {
+      "phase": "4. Validation Edge",
+      "test_id": "VAL-PATCH-EMPTY-STATUS",
+      "name": "Reject Blank Status on PATCH",
+      "method": "PATCH",
+      "endpoint": "/api/agent-leads/1/status",
+      "status_code": 400,
+      "expected_status": "400",
+      "passed": true,
+      "notes": "Rejected empty status with 400 Bad Request",
+      "response": {
+        "message": "Status cannot be empty."
+      }
+    },
+    {
+      "phase": "4. Validation Edge",
+      "test_id": "VAL-USER-NOTFOUND",
+      "name": "Return 404 for Non-existent User Lookup",
+      "method": "GET",
+      "endpoint": "/api/Users/9999999",
+      "status_code": 404,
+      "expected_status": "404",
+      "passed": true,
+      "notes": "Properly returned 404 Not Found",
+      "response": {
+        "message": "User with ID 9999999 not found."
+      }
+    },
+    {
+      "phase": "5. Teardown (DELETE)",
+      "test_id": "DEL-LEAD",
+      "name": "Delete AgentLead Record (ID: 1)",
+      "method": "DELETE",
+      "endpoint": "/api/agent-leads/1",
+      "status_code": 204,
+      "expected_status": "204",
+      "passed": true,
+      "notes": "Deleted with 204 and verified subsequent GET is 404: True",
+      "response": {
+        "deleteStatus": 204,
+        "getVerifyStatus": 404
+      }
+    },
+    {
+      "phase": "5. Teardown (DELETE)",
+      "test_id": "DEL-FOLLOW",
+      "name": "Delete UserFollows Relationship (ID: 1)",
+      "method": "DELETE",
+      "endpoint": "/api/UserFollows/1",
+      "status_code": 204,
+      "expected_status": "204",
+      "passed": true,
+      "notes": "Deleted with 204 and verified isFollowing is now False: True",
+      "response": {
+        "deleteStatus": 204,
+        "isFollowingAfterDelete": false
+      }
+    },
+    {
+      "phase": "5. Teardown (DELETE)",
+      "test_id": "DEL-PROJECT",
+      "name": "Delete Project Entity (ID: 3)",
+      "method": "DELETE",
+      "endpoint": "/api/Project/3",
+      "status_code": 204,
+      "expected_status": "204",
+      "passed": true,
+      "notes": "Deleted with 204 and verified subsequent GET is 404: True",
+      "response": {
+        "deleteStatus": 204,
+        "getVerifyStatus": 404
+      }
+    },
+    {
+      "phase": "5. Teardown (DELETE)",
+      "test_id": "DEL-AGENT",
+      "name": "Delete Agent Record (ID: 1)",
+      "method": "DELETE",
+      "endpoint": "/api/agents/1",
+      "status_code": 204,
+      "expected_status": "204",
+      "passed": true,
+      "notes": "Deleted with 204 and verified subsequent GET is 404: True",
+      "response": {
+        "deleteStatus": 204,
+        "getVerifyStatus": 404
+      }
+    },
+    {
+      "phase": "5. Teardown (DELETE)",
+      "test_id": "DEL-USER",
+      "name": "Delete User Record (ID: 3)",
+      "method": "DELETE",
+      "endpoint": "/api/Users/3",
+      "status_code": 204,
+      "expected_status": "204",
+      "passed": true,
+      "notes": "Deleted with 204 and verified subsequent GET is 404: True",
+      "response": {
+        "deleteStatus": 204,
+        "getVerifyStatus": 404
+      }
+    },
+    {
+      "phase": "5. Teardown (DELETE)",
+      "test_id": "DEL-USER",
+      "name": "Delete User Record (ID: 2)",
+      "method": "DELETE",
+      "endpoint": "/api/Users/2",
+      "status_code": 204,
+      "expected_status": "204",
+      "passed": true,
+      "notes": "Deleted with 204 and verified subsequent GET is 404: True",
+      "response": {
+        "deleteStatus": 204,
+        "getVerifyStatus": 404
+      }
+    },
+    {
+      "phase": "5. Teardown (DELETE)",
+      "test_id": "DEL-USER-NONEXIST",
+      "name": "Verify Deleting Non-existent User Returns 404",
+      "method": "DELETE",
+      "endpoint": "/api/Users/2",
+      "status_code": 404,
+      "expected_status": "404",
+      "passed": true,
+      "notes": "Properly returned 404 Not Found on redundant delete",
+      "response": {
+        "message": "User with ID 2 not found."
+      }
+    }
+  ]
+}

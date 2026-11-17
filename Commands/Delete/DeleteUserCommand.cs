@@ -1,5 +1,5 @@
-﻿using EstatePulse.Data;
-using MediatR;
+using EstatePulse.Data;
+using Mediator;
 using Microsoft.EntityFrameworkCore;
 
 namespace EstatePulse.Commands.Delete
@@ -15,7 +15,7 @@ namespace EstatePulse.Commands.Delete
             _context = context;
         }
 
-        public async Task<bool> Handle(DeleteUserCommand request, CancellationToken cancellationToken)
+        public async ValueTask<bool> Handle(DeleteUserCommand request, CancellationToken cancellationToken)
         {
             var user = await _context.Users
                 .FirstOrDefaultAsync(u => u.Id == request.Id, cancellationToken);

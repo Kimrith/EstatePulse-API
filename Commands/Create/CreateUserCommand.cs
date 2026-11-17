@@ -1,40 +1,15 @@
-﻿using System.ComponentModel.DataAnnotations;
+using System.IO;
 using EstatePulse.Data;
 using EstatePulse.DTOs;
-using EstatePulse.Enums;
 using EstatePulse.Models;
-using MediatR;
-using Microsoft.AspNetCore.Http;
+using Mediator;
 using Microsoft.EntityFrameworkCore;
 
 namespace EstatePulse.Commands.Create
 {
     public class CreateUserCommand : IRequest<UserDto>
     {
-        [Required]
-        [MaxLength(150)]
-        public string FullName { get; set; } = string.Empty;
-
-        [Required]
-        [EmailAddress]
-        [MaxLength(255)]
-        public string Email { get; set; } = string.Empty;
-
-        [Required]
-        [MaxLength(30)]
-        public string PhoneNumber { get; set; } = string.Empty;
-
-        [Required]
-        [MinLength(6)]
-        [MaxLength(100)]
-        public string Password { get; set; } = string.Empty;
-
-        public UserRole Role { get; set; } = UserRole.Customer;
-
-        [MaxLength(50)]
-        public string? NationalIdCard { get; set; }
-
-        public IFormFile? Avatar { get; set; }
+        public UserCreateDto User { get; set; } = new UserCreateDto();
     }
 
     public class CreateUserCommandHandler : IRequestHandler<CreateUserCommand, UserDto>
@@ -46,45 +21,47 @@ namespace EstatePulse.Commands.Create
             _context = context;
         }
 
-        public async Task<UserDto> Handle(CreateUserCommand request, CancellationToken cancellationToken)
+        public async ValueTask<UserDto> Handle(CreateUserCommand request, CancellationToken cancellationToken)
         {
+            var dto = request.User;
+
             var emailExists = await _context.Users
-                .AnyAsync(u => u.Email.ToLower() == request.Email.ToLower(), cancellationToken);
+                .AnyAsync(u => u.Email.ToLower() == dto.Email.ToLower(), cancellationToken);
 
             if (emailExists)
             {
-                throw new InvalidOperationException($"A user with email '{request.Email}' already exists.");
+                throw new InvalidOperationException($"A user with email '{dto.Email}' already exists.");
             }
 
             // Handle file upload if an avatar is provided
             string? avatarUrl = null;
-            if (request.Avatar != null && request.Avatar.Length > 0)
+            if (dto.Avatar != null && dto.Avatar.Length > 0)
             {
                 var uploadsFolder = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "uploads", "avatars");
                 Directory.CreateDirectory(uploadsFolder);
 
-                var fileName = $"{Guid.NewGuid()}{Path.GetExtension(request.Avatar.FileName)}";
+                var fileName = $"{Guid.NewGuid()}{Path.GetExtension(dto.Avatar.FileName)}";
                 var filePath = Path.Combine(uploadsFolder, fileName);
 
                 using (var stream = new FileStream(filePath, FileMode.Create))
                 {
-                    await request.Avatar.CopyToAsync(stream, cancellationToken);
+                    await dto.Avatar.CopyToAsync(stream, cancellationToken);
                 }
 
                 avatarUrl = $"/uploads/avatars/{fileName}";
             }
 
             // Hash password
-            var passwordHash = BCrypt.Net.BCrypt.HashPassword(request.Password);
+            var passwordHash = BCrypt.Net.BCrypt.HashPassword(dto.Password);
 
             var user = new User
             {
-                FullName = request.FullName,
-                Email = request.Email,
-                PhoneNumber = request.PhoneNumber,
+                FullName = dto.FullName,
+                Email = dto.Email,
+                PhoneNumber = dto.PhoneNumber,
                 PasswordHash = passwordHash,
-                Role = request.Role,
-                NationalIdCard = request.NationalIdCard,
+                Role = dto.Role,
+                NationalIdCard = dto.NationalIdCard,
                 AvatarUrl = avatarUrl,
                 IsActive = true,
                 CreatedAt = DateTime.UtcNow

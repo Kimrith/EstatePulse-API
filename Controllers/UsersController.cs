@@ -4,8 +4,9 @@ using EstatePulse.Commands.Update;
 using EstatePulse.Data;
 using EstatePulse.DTOs;
 using EstatePulse.Queries;
-using MediatR;
+using Mediator;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Caching.Memory;
 
 namespace EstatePulse.Controllers;
 
@@ -15,11 +16,13 @@ public class UsersController : ControllerBase
 {
     private readonly IMediator _mediator;
     private readonly AppDbContext _context;
+    private readonly IMemoryCache _cache;
 
-    public UsersController(IMediator mediator, AppDbContext context)
+    public UsersController(IMediator mediator, AppDbContext context, IMemoryCache cache)
     {
         _mediator = mediator;
         _context = context;
+        _cache = cache;
     }
 
     [HttpGet]
@@ -29,14 +32,14 @@ public class UsersController : ControllerBase
         [FromQuery] int pageSize = 12,
         CancellationToken cancellationToken = default)
     {
-        var result = await UserQueries.GetUsersAsync(_context, searchTerm, pageNumber, pageSize, cancellationToken);
+        var result = await UserQueries.GetUsersAsync(_context, searchTerm, pageNumber, pageSize, _cache, cancellationToken);
         return Ok(result);
     }
 
     [HttpGet("{id:int}")]
     public async Task<ActionResult<UserDto>> GetUserById(int id, CancellationToken cancellationToken)
     {
-        var user = await UserQueries.GetUserByIdAsync(_context, id, cancellationToken);
+        var user = await UserQueries.GetUserByIdAsync(_context, id, _cache, cancellationToken);
         if (user == null)
         {
             return NotFound(new { message = $"User with ID {id} not found." });
@@ -69,8 +72,8 @@ public class UsersController : ControllerBase
         [FromForm] UpdateUserCommand command,
         CancellationToken cancellationToken)
     {
-        // Bind the route ID to the command to prevent mismatched form payloads
-        command.Id = id;
+        // Bind the route ID to the nested User DTO
+        command.User.Id = id;
 
         try
         {
