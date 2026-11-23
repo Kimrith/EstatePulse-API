@@ -1,4 +1,4 @@
-using EstatePulse.Data;
+using EstatePulse.Common.Database;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -13,8 +13,10 @@ builder.Services.AddMediator(options =>
     options.ServiceLifetime = ServiceLifetime.Scoped;
 });
 
-// 3. Add In-Memory Cache
+// 3. Add In-Memory Cache & HttpContextAccessor
+builder.Services.AddHttpContextAccessor();
 builder.Services.AddMemoryCache();
+builder.Services.AddSingleton<EstatePulse.Common.Caching.ICacheService, EstatePulse.Common.Caching.MemoryCacheService>();
 
 // 4. Add Controllers & Swagger
 builder.Services.AddControllers();
