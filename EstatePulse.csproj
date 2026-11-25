@@ -23,4 +23,9 @@
     <PackageReference Include="Swashbuckle.AspNetCore" Version="10.3.1" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Modules\Bookings\Commands\Contract\" />
+    <Folder Include="Modules\Bookings\DTOs\Commissions\" />
+  </ItemGroup>
+
 </Project>

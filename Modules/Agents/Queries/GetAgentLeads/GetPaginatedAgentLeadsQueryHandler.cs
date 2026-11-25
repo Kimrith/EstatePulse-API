@@ -78,7 +78,7 @@ public sealed class GetPaginatedAgentLeadsQueryHandler : IRequestHandler<GetPagi
             {
                 totalCount = reader.GetInt32(0);
             }
-            items.Add(ReadAgentLeadDto(reader, startIndex: 1));
+            items.Add(AgentLeadQueryMapping.ReadAgentLeadDto(reader, offset: 1));
         }
 
         if (totalCount == 0 && offset > 0)
@@ -99,26 +99,5 @@ public sealed class GetPaginatedAgentLeadsQueryHandler : IRequestHandler<GetPagi
         }
 
         return new PaginatedList<AgentLeadDto>(items, totalCount, pageNumber, pageSize);
-    }
-
-    internal static AgentLeadDto ReadAgentLeadDto(DbDataReader reader, int startIndex = 0)
-    {
-        return new AgentLeadDto
-        {
-            Id = reader.GetInt32(startIndex + 0),
-            AgentId = reader.GetInt32(startIndex + 1),
-            CustomerId = reader.IsDBNull(startIndex + 2) ? null : reader.GetInt32(startIndex + 2),
-            LeadName = reader.GetString(startIndex + 3),
-            LeadPhone = reader.GetString(startIndex + 4),
-            LeadEmail = reader.IsDBNull(startIndex + 5) ? null : reader.GetString(startIndex + 5),
-            BudgetMin = reader.IsDBNull(startIndex + 6) ? null : reader.GetDecimal(startIndex + 6),
-            BudgetMax = reader.IsDBNull(startIndex + 7) ? null : reader.GetDecimal(startIndex + 7),
-            Status = reader.GetString(startIndex + 8),
-            Notes = reader.IsDBNull(startIndex + 9) ? null : reader.GetString(startIndex + 9),
-            CreatedAt = reader.GetDateTime(startIndex + 10),
-            UpdatedAt = reader.IsDBNull(startIndex + 11) ? null : reader.GetDateTime(startIndex + 11),
-            AgentCode = reader.IsDBNull(startIndex + 12) ? null : reader.GetString(startIndex + 12),
-            CustomerName = reader.IsDBNull(startIndex + 13) ? null : reader.GetString(startIndex + 13)
-        };
     }
 }

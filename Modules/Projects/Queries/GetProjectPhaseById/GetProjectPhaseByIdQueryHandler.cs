@@ -61,7 +61,7 @@ public sealed class GetProjectPhaseByIdQueryHandler : IRequestHandler<GetProject
             await using var reader = await command.ExecuteReaderAsync(cancellationToken);
             if (await reader.ReadAsync(cancellationToken))
             {
-                var dto = GetProjectPhasesQueryHandler.ReadProjectPhaseDto(reader);
+                var dto = ProjectPhaseQueryMapping.ReadProjectPhaseDto(reader);
                 _cache.Set(cacheKey, dto, CacheDuration, prefix: "phases");
                 return dto;
             }

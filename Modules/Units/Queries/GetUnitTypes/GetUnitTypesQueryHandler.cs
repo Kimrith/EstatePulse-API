@@ -78,7 +78,7 @@ public sealed class GetUnitTypesQueryHandler : IRequestHandler<GetUnitTypesQuery
                     totalCount = reader.GetInt32(0);
                 }
 
-                items.Add(UnitTypeQueryMapping.ReadUnitTypeDto(reader, startIndex: 1));
+                items.Add(UnitTypeQueryMapping.ReadUnitTypeDto(reader, offset: 1));
             }
 
             if (totalCount == 0 && offset > 0)

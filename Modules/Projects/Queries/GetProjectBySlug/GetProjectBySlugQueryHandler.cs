@@ -61,7 +61,7 @@ public sealed class GetProjectBySlugQueryHandler : IRequestHandler<GetProjectByS
             await using var reader = await command.ExecuteReaderAsync(cancellationToken);
             if (await reader.ReadAsync(cancellationToken))
             {
-                var project = GetAllProjectsQueryHandler.ReadProjectDto(reader);
+                var project = ProjectQueryMapping.ReadProjectDto(reader);
                 _cache.Set(cacheKey, project, CacheDuration, prefix: "projects");
                 return project;
             }

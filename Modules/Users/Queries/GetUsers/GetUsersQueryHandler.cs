@@ -74,7 +74,7 @@ public sealed class GetUsersQueryHandler : IRequestHandler<GetUsersQuery, Pagina
                     totalCount = reader.GetInt32(0);
                 }
 
-                items.Add(UserQueryMapping.ReadUserDto(reader, startIndex: 1));
+                items.Add(UserQueryMapping.ReadUserDto(reader, offset: 1));
             }
 
             if (totalCount == 0 && offset > 0)

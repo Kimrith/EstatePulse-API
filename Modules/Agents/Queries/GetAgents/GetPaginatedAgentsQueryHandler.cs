@@ -78,7 +78,7 @@ public sealed class GetPaginatedAgentsQueryHandler : IRequestHandler<GetPaginate
                     totalCount = reader.GetInt32(0);
                 }
 
-                items.Add(ReadAgentDto(reader, 1));
+                items.Add(AgentQueryMapping.ReadAgentDto(reader, 1));
             }
 
             if (totalCount == 0 && offset > 0)
@@ -93,24 +93,5 @@ public sealed class GetPaginatedAgentsQueryHandler : IRequestHandler<GetPaginate
             _cache.Set(cacheKey, result, CacheDuration, prefix: "agents");
             return result;
         }
-    }
-
-    internal static AgentDto ReadAgentDto(System.Data.Common.DbDataReader reader, int offset = 0)
-    {
-        return new AgentDto
-        {
-            Id = reader.GetInt32(offset),
-            UserId = reader.GetInt32(offset + 1),
-            AgentCode = reader.GetString(offset + 2),
-            LicenseNumber = reader.IsDBNull(offset + 3) ? null : reader.GetString(offset + 3),
-            CommissionRate = reader.GetDecimal(offset + 4),
-            AssignedBranch = reader.IsDBNull(offset + 5) ? null : reader.GetString(offset + 5),
-            TotalDealsClosed = reader.GetInt32(offset + 6),
-            Rating = reader.IsDBNull(offset + 7) ? null : reader.GetDecimal(offset + 7),
-            Bio = reader.IsDBNull(offset + 8) ? null : reader.GetString(offset + 8),
-            IsVerified = reader.GetBoolean(offset + 9),
-            CreatedAt = reader.GetDateTime(offset + 10),
-            UpdatedAt = reader.IsDBNull(offset + 11) ? null : reader.GetDateTime(offset + 11)
-        };
     }
 }

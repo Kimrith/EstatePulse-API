@@ -103,7 +103,7 @@ public sealed class GetUnitsQueryHandler : IRequestHandler<GetUnitsQuery, Pagina
             {
                 totalCount = reader.GetInt32(0);
             }
-            items.Add(UnitQueryMapping.ReadUnitDto(reader, utcNow, startIndex: 1));
+            items.Add(UnitQueryMapping.ReadUnitDto(reader, utcNow, offset: 1));
         }
 
         if (totalCount == 0 && offset > 0)

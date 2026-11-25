@@ -77,7 +77,7 @@ public sealed class GetAllProjectsQueryHandler : IRequestHandler<GetAllProjectsQ
                     totalCount = reader.GetInt32(0);
                 }
 
-                items.Add(ReadProjectDto(reader, 1));
+                items.Add(ProjectQueryMapping.ReadProjectDto(reader, 1));
             }
 
             if (totalCount == 0 && offset > 0)
@@ -92,23 +92,5 @@ public sealed class GetAllProjectsQueryHandler : IRequestHandler<GetAllProjectsQ
             _cache.Set(cacheKey, result, CacheDuration, prefix: "projects");
             return result;
         }
-    }
-
-    internal static ProjectDto ReadProjectDto(System.Data.Common.DbDataReader reader, int offset = 0)
-    {
-        return new ProjectDto
-        {
-            Id = reader.GetInt32(offset),
-            Name = reader.GetString(offset + 1),
-            Slug = reader.GetString(offset + 2),
-            LocationAddress = reader.IsDBNull(offset + 3) ? null : reader.GetString(offset + 3),
-            City = reader.IsDBNull(offset + 4) ? null : reader.GetString(offset + 4),
-            Latitude = reader.IsDBNull(offset + 5) ? null : reader.GetDecimal(offset + 5),
-            Longitude = reader.IsDBNull(offset + 6) ? null : reader.GetDecimal(offset + 6),
-            ThumbnailUrl = reader.IsDBNull(offset + 7) ? null : reader.GetString(offset + 7),
-            Description = reader.IsDBNull(offset + 8) ? null : reader.GetString(offset + 8),
-            IsPublished = reader.GetBoolean(offset + 9),
-            CreatedAt = reader.GetDateTime(offset + 10)
-        };
     }
 }

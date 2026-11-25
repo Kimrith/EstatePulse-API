@@ -62,7 +62,7 @@ public sealed class GetAgentByIdQueryHandler : IRequestHandler<GetAgentByIdQuery
             await using var reader = await command.ExecuteReaderAsync(cancellationToken);
             if (await reader.ReadAsync(cancellationToken))
             {
-                var dto = GetPaginatedAgentsQueryHandler.ReadAgentDto(reader);
+                var dto = AgentQueryMapping.ReadAgentDto(reader);
                 _cache.Set(cacheKey, dto, CacheDuration, prefix: "agents");
                 return dto;
             }

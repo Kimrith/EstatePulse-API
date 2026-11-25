@@ -51,7 +51,7 @@ public sealed class GetAgentLeadByIdQueryHandler : IRequestHandler<GetAgentLeadB
         await using var reader = await command.ExecuteReaderAsync(cancellationToken);
         if (await reader.ReadAsync(cancellationToken))
         {
-            return GetPaginatedAgentLeadsQueryHandler.ReadAgentLeadDto(reader);
+            return AgentLeadQueryMapping.ReadAgentLeadDto(reader);
         }
 
         return null;

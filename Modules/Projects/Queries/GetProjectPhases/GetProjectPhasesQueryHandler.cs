@@ -81,7 +81,7 @@ public sealed class GetProjectPhasesQueryHandler : IRequestHandler<GetProjectPha
                     totalCount = reader.GetInt32(0);
                 }
 
-                items.Add(ReadProjectPhaseDto(reader, startIndex: 1));
+                items.Add(ProjectPhaseQueryMapping.ReadProjectPhaseDto(reader, offset: 1));
             }
 
             if (totalCount == 0 && offset > 0)
@@ -100,22 +100,5 @@ public sealed class GetProjectPhasesQueryHandler : IRequestHandler<GetProjectPha
             _cache.Set(cacheKey, result, CacheDuration, prefix: "phases");
             return result;
         }
-    }
-
-    internal static ProjectPhaseDto ReadProjectPhaseDto(DbDataReader reader, int startIndex = 0)
-    {
-        return new ProjectPhaseDto
-        {
-            Id = reader.GetInt32(startIndex + 0),
-            ProjectId = reader.GetInt32(startIndex + 1),
-            PhaseName = reader.GetString(startIndex + 2),
-            Slug = reader.GetString(startIndex + 3),
-            MasterPlanSvgUrl = reader.IsDBNull(startIndex + 4) ? null : reader.GetString(startIndex + 4),
-            LaunchDate = reader.IsDBNull(startIndex + 5) ? null : reader.GetDateTime(startIndex + 5),
-            ExpectedCompletionDate = reader.IsDBNull(startIndex + 6) ? null : reader.GetDateTime(startIndex + 6),
-            Status = reader.GetString(startIndex + 7),
-            CreatedAt = reader.GetDateTime(startIndex + 8),
-            ProjectName = reader.IsDBNull(startIndex + 9) ? null : reader.GetString(startIndex + 9)
-        };
     }
 }
